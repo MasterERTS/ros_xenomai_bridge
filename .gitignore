@@ -1,1 +1,5 @@
-
+.gitignore
+xenomai/bin
+xenomai/obj
+xenomai/start.sh
+.vscode/*
