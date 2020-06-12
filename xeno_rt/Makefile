@@ -13,7 +13,7 @@ INC_DIRS = $(INC_XENO)
 CFLAGS   = $(CFLAGS_OPTIONS) $(INC_DIRS) -I/usr/xenomai/include/trank
 LDFLAGS	 = $(LIB_XENO)
 
-SOURCES	=	xddp-echo.c
+SOURCES	=	xeno_xddp_app.c
 			 
 CUR_DIR = ./
 OBJ_DIR = obj
@@ -21,7 +21,7 @@ OUT_DIR = bin
 EXEC_TARGET	= xddp-echo
 START	= start
 
-ifeq ($(wildcard xddp-echo.c),)
+ifeq ($(wildcard xeno_xddp_app.c),)
 CC = $(CROSS_COMPILE)gcc
 else
 CC = $(CROSS_COMPILE)g++

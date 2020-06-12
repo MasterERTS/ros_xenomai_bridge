@@ -35,7 +35,7 @@
  *   =>  write traffic to NRT domain via sendto()       |
  *   =>  read traffic from NRT domain via recvfrom() <--|--+
  *                                                      |  |
- * regular_thread---------------------------------------+  |
+ * regular_thread (ros side)----------------------------+  |
  *   =>  open /dev/rtp0                                 |  ^
  *   =>  read traffic from RT domain via read()         |  |
  *   =>  echo traffic back to RT domain via write()     +--+
@@ -58,7 +58,7 @@
 #include <rtdk.h>
 #include <rtdm/rtipc.h>
 
-pthread_t rt, nrt;
+pthread_t rt;
 
 #define XDDP_PORT 2	/* [0..CONFIG-XENO_OPT_PIPE_NRDEV - 1] */
 
@@ -168,41 +168,11 @@ void *realtime_thread(void *arg)
 	return NULL;
 }
 
-void *regular_thread(void *arg)
-{
-	char buf[128], *devname;
-	int fd, ret;
-
-	if (asprintf(&devname, "/dev/rtp%d", XDDP_PORT) < 0)
-		fail("asprintf");
-
-	fd = open(devname, O_RDWR);
-	free(devname);
-	if (fd < 0)
-		fail("open");
-
-	for (;;) {
-		/* Get the next message from realtime_thread. */
-		ret = read(fd, buf, sizeof(buf));
-		if (ret <= 0)
-			fail("read");
-
-		/* Echo the message back to realtime_thread. */
-		ret = write(fd, buf, ret);
-		if (ret <= 0)
-			fail("write");
-	}
-
-	return NULL;
-}
-
 void cleanup_upon_sig(int sig)
 {
 	pthread_cancel(rt);
-	pthread_cancel(nrt);
 	signal(sig, SIG_DFL);
 	pthread_join(rt, NULL);
-	pthread_join(nrt, NULL);
 }
 
 int main(int argc, char **argv)
@@ -239,17 +209,6 @@ int main(int argc, char **argv)
 	errno = pthread_create(&rt, &rtattr, &realtime_thread, NULL);
 	if (errno)
 		fail("pthread_create");
-
-	/*
-	pthread_attr_init(&regattr);
-	pthread_attr_setdetachstate(&regattr, PTHREAD_CREATE_JOINABLE);
-	pthread_attr_setinheritsched(&regattr, PTHREAD_EXPLICIT_SCHED);
-	pthread_attr_setschedpolicy(&regattr, SCHED_OTHER);
-	
-	errno = pthread_create(&nrt, &regattr, &regular_thread, NULL);
-	if (errno)
-		fail("pthread_create");
-	*/
 
 	sigsuspend(&oldmask);
 
