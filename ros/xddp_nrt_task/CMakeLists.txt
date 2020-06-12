@@ -16,6 +16,8 @@ add_library(listen classes/ListenerXddp.cpp)
 add_library(chat classes/ChatterXddp.cpp)
 
 add_executable(xddp_chatter src/chatter.cpp)
+add_executable(nrt_thread src/xddp_thread.cpp)
 add_executable(xddp_listener src/listener.cpp)
 target_link_libraries(xddp_chatter chat ${catkin_LIBRARIES})
 target_link_libraries(xddp_listener listen ${catkin_LIBRARIES})
+target_link_libraries(nrt_thread chat listen ${catkin_LIBRARIES})

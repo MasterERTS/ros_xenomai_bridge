@@ -208,7 +208,7 @@ void cleanup_upon_sig(int sig)
 int main(int argc, char **argv)
 {
 	struct sched_param rtparam = { .sched_priority = 42 };
-	pthread_attr_t rtattr, regattr;
+	pthread_attr_t rtattr;
 	sigset_t mask, oldmask;
 
 	mlockall(MCL_CURRENT | MCL_FUTURE);
@@ -240,14 +240,16 @@ int main(int argc, char **argv)
 	if (errno)
 		fail("pthread_create");
 
+	/*
 	pthread_attr_init(&regattr);
 	pthread_attr_setdetachstate(&regattr, PTHREAD_CREATE_JOINABLE);
 	pthread_attr_setinheritsched(&regattr, PTHREAD_EXPLICIT_SCHED);
 	pthread_attr_setschedpolicy(&regattr, SCHED_OTHER);
-
+	
 	errno = pthread_create(&nrt, &regattr, &regular_thread, NULL);
 	if (errno)
 		fail("pthread_create");
+	*/
 
 	sigsuspend(&oldmask);
 

@@ -4,7 +4,11 @@ class ChatterXDDP : public MinimalPublisher
 {
     public: 
         ChatterXDDP();
-        void nrt_thread();
+        char* nrt_thread();
     private:
         static const char *msg[];
+
+        static void fail(const char *reason);
+        char buf[128], *devname;
+	    int fd, ret;
 };
