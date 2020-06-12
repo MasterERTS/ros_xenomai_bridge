@@ -1,5 +1,5 @@
 .gitignore
-xenomai/bin
-xenomai/obj
-xenomai/start.sh
+xeno_rt/bin
+xeno_rt/obj
+xeno_rt/start.sh
 .vscode/*
