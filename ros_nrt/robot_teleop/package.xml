@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>xddp_sensor_exchange</name>
+  <name>robot_teleop</name>
   <version>0.0.1</version>
-  <description>The xddp_sensor_exchange package</description>
+  <description>The robot_teleop package</description>
 
   <maintainer email="erwin.lejeune15@gmail.com">Erwin Lejeune</maintainer>
   <maintainer email="sampreet.sarker@eleves.ec-nantes.fr">Sampreet Sarkar</maintainer>

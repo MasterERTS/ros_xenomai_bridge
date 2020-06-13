@@ -1,9 +1,9 @@
-#include "xddp_utilities/ChatterXddp.h"
+#include "ChatterXddp.h"
 
 int main(int argc, char**argv)
 {
     ros::init(argc, argv, "xddp_talker");
-    xddp_utilities::ChatterXDDP chatter("/xddp");
+    ChatterXDDP chatter("/xddp", 2);
 
     ros::Rate loop_rate(10);
     while(ros::ok())
