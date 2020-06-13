@@ -8,7 +8,7 @@
 <br />
 <p align="center">
     <!--- relative path means image/image.png instead of https://etc... -->
-    <img src="img/img.gif" alt="Logo" width="600" height="400">                           
+    <img src="img/img.gif" alt="Logo" width="700" height="400">                           
 </a>
 
   <h3 align="center">Xenomai/ROS Bridge to bind NRT and RT applications</h3>
