@@ -1,6 +1,6 @@
 #include "ChatterXddp.h"
 
-ChatterXDDP::ChatterXDDP() : MinimalPublisher { "/xddp" }
+ChatterXDDP::ChatterXDDP(std::string topic) : MinimalPublisher { topic }
 {
 
 	if (asprintf(&(this->devname), "/dev/rtp%d", PIPE_XDDP) < 0)

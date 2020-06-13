@@ -3,7 +3,7 @@
 class ChatterXDDP : public MinimalPublisher
 {
     public: 
-        ChatterXDDP();
+        ChatterXDDP(std::string topic);
         char* nrt_thread();
     private:
         static const char *msg[];

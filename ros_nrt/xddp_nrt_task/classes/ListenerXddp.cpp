@@ -1,6 +1,6 @@
 #include "ListenerXddp.h"
 
-ListenerXDDP::ListenerXDDP() : MinimalSubscriber { "/xddp" }
+ListenerXDDP::ListenerXDDP(std::string topic) : MinimalSubscriber { topic }
 {
     // do nothing
 }

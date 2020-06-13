@@ -3,7 +3,7 @@
 int main(int argc, char**argv)
 {
     ros::init(argc, argv, "xddp_nrt_task");
-    ChatterXDDP chatter;
+    ChatterXDDP chatter("/xddp");
 
     ros::Rate loop_rate(10);
     while(ros::ok())

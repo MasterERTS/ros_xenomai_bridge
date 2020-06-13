@@ -2,7 +2,7 @@
 
 int main(int argc, char**argv)
 {
-    ros::init(argc, argv, "xddp_listener");
+    ros::init(argc, argv, "listener");
     ListenerXDDP listener;
     ros::Rate loop_rate(10);
     ros::spin();
