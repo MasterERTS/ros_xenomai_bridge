@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>xddp_nrt_task</name>
+  <name>xddp_utilities</name>
   <version>0.0.1</version>
-  <description>The xddp_nrt_task package</description>
+  <description>The xddp_utilities package</description>
 
   <maintainer email="erwin.lejeune15@gmail.com">Erwin Lejeune</maintainer>
-  <maintainer email="sampreet.sarker@eleves.ec-nantes.fr">Sampreet Sarkar</maintainer>
-
+  
   <license>MIT</license>
 
   <buildtool_depend>catkin</buildtool_depend>

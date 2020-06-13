@@ -1,4 +1,7 @@
-#include "xddp_ros.h"
+#ifndef LISTENER_XDDP_H
+#define LISTENER_XDDP_H
+
+#include "MinimalSubscriber.h"
 
 class ListenerXDDP : public MinimalSubscriber
 {
@@ -8,3 +11,5 @@ class ListenerXDDP : public MinimalSubscriber
     private:
         static const char *msg[];
 };
+
+#endif

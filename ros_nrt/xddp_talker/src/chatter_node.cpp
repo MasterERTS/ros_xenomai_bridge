@@ -1,9 +1,9 @@
-#include "ChatterXddp.h"
+#include "xddp_utilities/ChatterXddp.h"
 
 int main(int argc, char**argv)
 {
     ros::init(argc, argv, "chatter");
-    MinimalPublisher chatter("/chatter");
+    xddp_utilities::MinimalPublisher chatter("/chatter");
     ros::Rate loop_rate(10);
     std::size_t i = 0;
     while(ros::ok())

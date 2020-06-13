@@ -1,4 +1,7 @@
-#include "xddp_ros.h"
+#ifndef CHATTER_XDDP_H
+#define CHATTER_XDDP_H
+
+#include "MinimalPublisher.h"
 
 class ChatterXDDP : public MinimalPublisher
 {
@@ -12,3 +15,5 @@ class ChatterXDDP : public MinimalPublisher
         char buf[128], *devname;
 	    int fd, ret;
 };
+
+#endif
