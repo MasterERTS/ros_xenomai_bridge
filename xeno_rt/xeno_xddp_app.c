@@ -1,50 +1,5 @@
-/*
- * XDDP-based RT/NRT threads communication demo.
- *
- * Real-time Xenomai threads and regular Linux threads may want to
- * exchange data in a way that does not require the former to leave
- * the real-time domain (i.e. secondary mode). Message pipes - as
- * implemented by the RTDM-based XDDP protocol - are provided for this
- * purpose.
- *
- * On the Linux domain side, pseudo-device files named /dev/rtp<minor>
- * give regular POSIX threads access to non real-time communication
- * endpoints, via the standard character-based I/O interface. On the
- * Xenomai domain side, sockets may be bound to XDDP ports, which act
- * as proxies to send and receive data to/from the associated
- * pseudo-device files. Ports and pseudo-device minor numbers are
- * paired, meaning that e.g. port 7 will proxy the traffic for
- * /dev/rtp7. Therefore, port numbers may range from 0 to
- * CONFIG_XENO_OPT_PIPE_NRDEV - 1.
- *
- * All data sent through a bound/connected XDDP socket via sendto(2) or
- * write(2) will be passed to the peer endpoint in the Linux domain,
- * and made available for reading via the standard read(2) system
- * call. Conversely, all data sent using write(2) through the non
- * real-time endpoint will be conveyed to the real-time socket
- * endpoint, and made available to the recvfrom(2) or read(2) system
- * calls.
- *
- * Both threads can use the bi-directional data path to send and
- * receive datagrams in a FIFO manner, as illustrated by the simple
- * echoing process implemented by this program.
- *
- * realtime_thread------------------------------>-------+
- *   =>  get socket                                     |
- *   =>  bind socket to port 0                          v
- *   =>  write traffic to NRT domain via sendto()       |
- *   =>  read traffic from NRT domain via recvfrom() <--|--+
- *                                                      |  |
- * regular_thread (ros side)----------------------------+  |
- *   =>  open /dev/rtp0                                 |  ^
- *   =>  read traffic from RT domain via read()         |  |
- *   =>  echo traffic back to RT domain via write()     +--+
- *
- * See Makefile in this directory for build directives.
- *
- * NOTE: XDDP is a replacement for the legacy RT_PIPE interface
- * available from the native skin until Xenomai 3.
- */
+/* XDDP-based RT thread waiting a response from NRT thread */
+
 #include <sys/mman.h>
 #include <stdio.h>
 #include <stdlib.h>
