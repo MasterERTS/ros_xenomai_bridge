@@ -1,7 +1,7 @@
 <launch>
 
 	<!-- Run stage simulator and load world map -->
-	<node pkg="stage_ros" type="stageros" name="stage_ros" args="$(find robotcraft-ros-navigation)/worlds/full_world_map.world" />
+	<node pkg="stage_ros" type="stageros" name="stage_ros" args="$(find xddp_sensor_exchange)/worlds/rooms.world" />
 
 	<!-- Run teleop node -->
 	<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop" output="screen"/>

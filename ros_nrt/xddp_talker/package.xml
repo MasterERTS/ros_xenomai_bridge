@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>xddp_echo</name>
+  <name>xddp_talker</name>
   <version>0.0.1</version>
   <description>The xddp_echo package</description>
 
@@ -15,6 +15,7 @@
   <build_depend>std_msgs</build_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
+  <build_export_depend>xddp_utilities</build_export_depend>
   <exec_depend>xddp_utilities</exec_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>std_msgs</exec_depend>

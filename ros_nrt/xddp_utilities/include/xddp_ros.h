@@ -17,6 +17,4 @@
 #include <fcntl.h>
 #include <string>
 
-#define PIPE_XDDP 2
-
 #endif

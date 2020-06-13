@@ -1,9 +1,9 @@
 #include "ChatterXddp.h"
 
-ChatterXDDP::ChatterXDDP(std::string topic) : MinimalPublisher { topic }
+ChatterXDDP::ChatterXDDP(std::string topic, unsigned int xddp_pipe) : MinimalPublisher { topic }
 {
 
-	if (asprintf(&(this->devname), "/dev/rtp%d", PIPE_XDDP) < 0)
+	if (asprintf(&(this->devname), "/dev/rtp%d", xddp_pipe) < 0)
 		fail("asprintf");
 
 	this->fd = open(devname, O_RDWR);
@@ -18,7 +18,7 @@ void ChatterXDDP::fail(const char *reason)
 	exit(EXIT_FAILURE);
 }
 
-char* ChatterXDDP::nrt_thread() 
+char* ChatterXDDP::nrt_thread_read_write() 
 {
     /* Get the next message from realtime_thread. */
 	this->ret = read(this->fd, this->buf, sizeof(this->buf));

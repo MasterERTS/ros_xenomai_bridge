@@ -32,12 +32,14 @@ add_library(
   src/ChatterXddp.cpp
 )
 
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+
 install(
   TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
 
 install(
-  DIRECTORY include/${PROJECT_NAME}/
+  DIRECTORY include/${PROJECT_NAME}
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )

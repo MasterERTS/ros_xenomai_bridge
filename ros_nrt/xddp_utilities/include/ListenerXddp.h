@@ -7,7 +7,7 @@ class ListenerXDDP : public MinimalSubscriber
 {
     public: 
         ListenerXDDP(std::string topic);
-        void nrt_thread();
+        void nrt_thread_read_write();
     private:
         static const char *msg[];
 };

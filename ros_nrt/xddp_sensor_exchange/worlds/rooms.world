@@ -1,0 +1,27 @@
+define floorplan model (
+	color "SlateGray"
+	boundary 1
+	gui_nose 1
+	gui_grid 0
+	gui_move 0
+	obstacle_return 1
+)
+
+window(
+	size [700 650 1]
+	rotate [ 0 0]
+	center [ 13.525 10.825 0 ]
+	scale 25
+	show_data 1
+	show_clock 1
+)
+
+floorplan (
+	size [27.05 21.65 1.000]
+	pose [13.525 10.825 0.000 0.000]
+	bitmap "../maps/rooms.png"
+)
+
+include "../robot/simple_robot.inc"
+
+simple_robot (pose [ 11.1  9.2  0.000  90.000 ] name "robot")
