@@ -70,6 +70,7 @@ Both threads can use the bi-directional data path to send and
 receive datagrams in a FIFO manner, as illustrated by the simple
 echoing process implemented by this program.
 
+```
 realtime_thread------------------------------>-------+
   =>  get socket                                     |
   =>  bind socket to port 0                          v
@@ -80,6 +81,7 @@ regular_thread (ros side)----------------------------+  |
   =>  open /dev/rtp0                                 |  ^
   =>  read traffic from RT domain via read()         |  |
   =>  echo traffic back to RT domain via write()     +--+
+ ```
 
 See Makefile in the xeno_rt/ directory for more information
 
