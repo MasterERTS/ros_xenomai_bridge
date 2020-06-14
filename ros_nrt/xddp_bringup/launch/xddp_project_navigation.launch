@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find reactive_navigation)/launch/reactive.launch"/>
+    <node pkg="xddp_sensors" type="xddp_sensors" name="xddp_sensors" output="screen"/>
+</launch>
