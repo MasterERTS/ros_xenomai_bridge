@@ -2,7 +2,8 @@
 
 ChatterXDDP::ChatterXDDP(std::string topic, unsigned int xddp_pipe) : MinimalPublisher { topic }
 {
-
+	this->req_n = 0;
+	ROS_INFO("Reading through pipe rtp%d", xddp_pipe);
 	if (asprintf(&(this->devname), "/dev/rtp%d", xddp_pipe) < 0)
 		fail("asprintf");
 
@@ -10,6 +11,8 @@ ChatterXDDP::ChatterXDDP(std::string topic, unsigned int xddp_pipe) : MinimalPub
 	free(this->devname);
 
 	if (this->fd < 0) fail("open");
+
+	ROS_INFO("Successfully opened pipe rtp%d", xddp_pipe);
 }
 
 void ChatterXDDP::fail(const char *reason)
@@ -18,7 +21,7 @@ void ChatterXDDP::fail(const char *reason)
 	exit(EXIT_FAILURE);
 }
 
-char* ChatterXDDP::nrt_thread_read_write() 
+char* ChatterXDDP::nrt_thread_read_write()
 {
     /* Get the next message from realtime_thread. */
 	this->ret = read(this->fd, this->buf, sizeof(this->buf));
@@ -40,8 +43,14 @@ char* ChatterXDDP::nrt_thread_read()
     return(this->buf);
 }
 
-void ChatterXDDP::nrt_thread_write(char buffer[128]) 
+void ChatterXDDP::nrt_thread_write(char* buffer) 
 {
+	if (this->req_n == 0) {
+		/* Get the next message from realtime_thread. */
+		this->ret = read(this->fd, this->buf, sizeof(this->buf));
+		if (this->ret <= 0) this->fail("read");
+		this->req_n++;
+	}
 	this->ret = write(this->fd, buffer, this->ret);
 	if (this->ret <= 0) this->fail("write");
 }

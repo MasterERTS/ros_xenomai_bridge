@@ -1,5 +1,8 @@
 .gitignore
-xeno_rt/bin
-xeno_rt/obj
-xeno_rt/start.sh
+xeno_rt/sensors/bin
+xeno_rt/sensors/obj
+xeno_rt/sensors/start.sh
+xeno_rt/talker/bin
+xeno_rt/talker/obj
+xeno_rt/talker/start.sh
 .vscode/*

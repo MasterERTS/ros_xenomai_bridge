@@ -59,7 +59,7 @@
 #include <rtdk.h>
 #include <rtdm/rtipc.h>
 
-pthread_t rt, nrt;
+pthread_t rt;
 
 #define XDDP_PORT 2     /* [0..CONFIG-XENO_OPT_PIPE_NRDEV - 1] */
 
@@ -69,13 +69,13 @@ static const char *msg[] = {
     "Our",
     "Masters project",
     "aka",
-	"Bringing real time",
-	"Capabilities",
-	"To ROS",
-	"Through Xenomai",
-	"and its XDDP",
-	"communication protocol",
-	"Bye !"
+    "Bringing real time",
+    "Capabilities",
+    "To ROS",
+    "Through Xenomai",
+    "and its XDDP",
+    "communication protocol",
+    "Bye !"
 };
 
 static void fail(const char *reason)

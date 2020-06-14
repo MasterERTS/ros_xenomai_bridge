@@ -59,7 +59,8 @@
 #include <rtdk.h>
 #include <rtdm/rtipc.h>
 
-pthread_t rt1, rt2;
+pthread_t rt1;
+//pthread_t rt2;
 
 #define XDDP_PORT_LASER 0
 #define XDDP_PORT_ODOM  1
@@ -76,7 +77,7 @@ static void *realtime_thread1(void *arg)
         int ret, s, len;
         struct timespec ts;
         size_t poolsz;
-        char buf[128];
+        char buf[256];
         /*
          * Get a datagram socket to bind to the RT endpoint. Each
          * endpoint is represented by a port number within the XDDP
@@ -109,11 +110,20 @@ static void *realtime_thread1(void *arg)
         ret = bind(s, (struct sockaddr *)&saddr, sizeof(saddr));
         if (ret)
                 fail("bind");
+        printf("LaserScan socket bounded...\r\n");
+
+        len = strlen("start");
+        ret = sendto(s, "start", len, 0, NULL, 0);
+        if (ret != len)
+                fail("sendto");
+        rt_printf("%s: sent %d bytes, \"%.*s\"\n",
+                  __FUNCTION__, ret, ret, "start");
         for (;;) {
+                len = strlen("ack");
                 ret = recvfrom(s, buf, sizeof(buf), 0, NULL, 0);
                 if (ret <= 0)
                         fail("recvfrom");
-                rt_printf("   => \"%.*s\" echoed by peer\n", ret, buf);
+                printf("%s   => \"%.*s\" echoed by peer\n", __FUNCTION__, ret, buf);
                 
                 ret = sendto(s, "ack", len, 0, NULL, 0);
                 if (ret != len)
@@ -132,6 +142,7 @@ static void *realtime_thread1(void *arg)
         return NULL;
 }
 
+/*
 static void *realtime_thread2(void *arg)
 {
         struct sockaddr_ipc saddr;
@@ -139,32 +150,19 @@ static void *realtime_thread2(void *arg)
         struct timespec ts;
         size_t poolsz;
         char buf[128];
-        /*
-         * Get a datagram socket to bind to the RT endpoint. Each
-         * endpoint is represented by a port number within the XDDP
-         * protocol namespace.
-         */
+
         s = socket(AF_RTIPC, SOCK_DGRAM, IPCPROTO_XDDP);
         if (s < 0) {
                 perror("socket");
                 exit(EXIT_FAILURE);
         }
-        /*
-         * Set a local 16k pool for the RT endpoint. Memory needed to
-         * convey datagrams will be pulled from this pool, instead of
-         * Xenomai's system pool.
-         */
-        poolsz = 16384; /* bytes */
+
+        poolsz = 16384;
         ret = setsockopt(s, SOL_XDDP, XDDP_POOLSZ,
                          &poolsz, sizeof(poolsz));
         if (ret)
                 fail("setsockopt");
-        /*
-         * Bind the socket to the port, to setup a proxy to channel
-         * traffic to/from the Linux domain.
-         *
-         * saddr.sipc_port specifies the port number to use.
-         */
+
         memset(&saddr, 0, sizeof(saddr));
         saddr.sipc_family = AF_RTIPC;
         saddr.sipc_port = XDDP_PORT_ODOM;
@@ -172,6 +170,7 @@ static void *realtime_thread2(void *arg)
         if (ret)
                 fail("bind");
         for (;;) {
+                len = strlen("ack");
                 ret = recvfrom(s, buf, sizeof(buf), 0, NULL, 0);
                 if (ret <= 0)
                         fail("recvfrom");
@@ -182,26 +181,26 @@ static void *realtime_thread2(void *arg)
                         fail("sendto");
                 rt_printf("%s: sent %d bytes, \"%.*s\"\n",
                           __FUNCTION__, ret, ret, "ack");
-                /*
-                 * We run in full real-time mode (i.e. primary mode),
-                 * so we have to let the system breathe between two
-                 * iterations.
-                 */
+
                 ts.tv_sec = 0;
-                ts.tv_nsec = 500000000; /* 500 ms */
+                ts.tv_nsec = 500000000;
                 clock_nanosleep(CLOCK_REALTIME, 0, &ts, NULL);
         }
         return NULL;
 }
+*/
 
 static void cleanup_upon_sig(int sig)
 {
-        pthread_cancel(rt);
+        pthread_cancel(rt1);
+        //pthread_cancel(rt2);
         signal(sig, SIG_DFL);
-        pthread_join(rt, NULL);
+        pthread_join(rt1, NULL);
+        //pthread_join(rt2, NULL);
 }
 int main(int argc, char **argv)
 {
+        printf("ROS Sensors : nrt/rt data exchange application !\r\n");
         struct sched_param rtparam = { .sched_priority = 42 };
         pthread_attr_t rtattr;
         sigset_t mask, oldmask;
@@ -214,12 +213,7 @@ int main(int argc, char **argv)
         sigaddset(&mask, SIGHUP);
         signal(SIGHUP, cleanup_upon_sig);
         pthread_sigmask(SIG_BLOCK, &mask, &oldmask);
-        /*
-         * This is a real-time compatible printf() package from
-         * Xenomai's RT Development Kit (RTDK), that does NOT cause
-         * any transition to secondary (i.e. non real-time) mode when
-         * writing output.
-         */
+
         rt_print_auto_init(1);
         pthread_attr_init(&rtattr);
         pthread_attr_setdetachstate(&rtattr, PTHREAD_CREATE_JOINABLE);
@@ -229,9 +223,11 @@ int main(int argc, char **argv)
         errno = pthread_create(&rt1, &rtattr, &realtime_thread1, NULL);
         if (errno)
                 fail("pthread_create rt1");
+        /*
         errno = pthread_create(&rt2, &rtattr, &realtime_thread2, NULL);
         if (errno)
                 fail("pthread_create rt2");
+        */
         sigsuspend(&oldmask);
         return 0;
 }
