@@ -13,15 +13,15 @@ INC_DIRS = $(INC_XENO)
 CFLAGS   = $(CFLAGS_OPTIONS) $(INC_DIRS) -I/usr/xenomai/include/trank
 LDFLAGS	 = $(LIB_XENO)
 
-SOURCES	=	xeno_xddp_app.c
+SOURCES	=	xeno_ros_sensors.c
 			 
 CUR_DIR = ./
 OBJ_DIR = obj
 OUT_DIR = bin
-EXEC_TARGET	= xddp-echo
+EXEC_TARGET	= xddp-sensors
 START	= start
 
-ifeq ($(wildcard xeno_xddp_app.c),)
+ifeq ($(wildcard xeno_ros_sensors.c),)
 CC = $(CROSS_COMPILE)gcc
 else
 CC = $(CROSS_COMPILE)g++
@@ -51,8 +51,8 @@ all:
 endif
 
 $(START): 
-	@printf "## This is a project made within Seoul National University of Science and Technology \n" > $(START).sh
-	@printf "## Embedded Systems Laboratory 2015 - Raimarius Tolentino Delgado \n\n" >> $(START).sh
+	@printf "## This is a project made within Ecole Centrale de Nantes \n" > $(START).sh
+	@printf "## Embedded Real Time Systems path - Erwin Lejeune \n\n" >> $(START).sh
 	@printf "## Start-up for dynamically linked executable file \n\n\n\n" >> $(START).sh
 	@printf "export LD_LIBRARY_PATH=$(XENOMAI_PATH)/lib:$(LIB_DIR):$(LIB_URG) \n" >> $(START).sh
 	@printf "./$(OUT_DIR)/$(EXEC_TARGET)\n" >> $(START).sh
