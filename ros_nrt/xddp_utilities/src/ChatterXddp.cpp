@@ -30,3 +30,20 @@ char* ChatterXDDP::nrt_thread_read_write()
 
     return(this->buf);
 }
+
+char* ChatterXDDP::nrt_thread_read() 
+{
+    /* Get the next message from realtime_thread. */
+	this->ret = read(this->fd, this->buf, sizeof(this->buf));
+	if (this->ret <= 0) this->fail("read");
+
+    return(this->buf);
+}
+
+char* ChatterXDDP::nrt_thread_write(char buffer[128]) 
+{
+	this->ret = write(this->fd, buffer, this->ret);
+	if (this->ret <= 0) this->fail("write");
+
+    return(buffer);
+}
