@@ -197,10 +197,8 @@ static void *realtime_thread2(void *arg)
 static void cleanup_upon_sig(int sig)
 {
         pthread_cancel(rt);
-        pthread_cancel(nrt);
         signal(sig, SIG_DFL);
         pthread_join(rt, NULL);
-        pthread_join(nrt, NULL);
 }
 int main(int argc, char **argv)
 {
