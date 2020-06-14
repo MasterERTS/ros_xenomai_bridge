@@ -40,10 +40,8 @@ char* ChatterXDDP::nrt_thread_read()
     return(this->buf);
 }
 
-char* ChatterXDDP::nrt_thread_write(char buffer[128]) 
+void ChatterXDDP::nrt_thread_write(char buffer[128]) 
 {
 	this->ret = write(this->fd, buffer, this->ret);
 	if (this->ret <= 0) this->fail("write");
-
-    return(buffer);
 }
