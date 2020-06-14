@@ -9,9 +9,8 @@
 #define XDDP_PORT_LASER 0
 #define XDDP_PORT_ODOM  1
 
-float left_distance = 0.0;
-float front_distance = 0.0;
-float right_distance = 0.0;
+float left_distance = 0.0, front_distance = 0.0, right_distance = 0.0;
+float px = 0.0, py = 0.0, oz = 0.0;
 
 std::string laser_msg;
 std::string odom_msg;
@@ -30,7 +29,6 @@ void laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
 
 void odomCallback(const nav_msgs::Odometry::ConstPtr& msg)
 {
-    float px, py, oz;
     px = msg->pose.pose.position.x;
     py = msg->pose.pose.position.y;
     oz = msg->pose.pose.orientation.z;
@@ -43,10 +41,10 @@ int main(int argc, char** argv)
     char fwd_buffer[256];
     ros::NodeHandle nh_;
     ros::Subscriber subLaser = nh_.subscribe<sensor_msgs::LaserScan>("/base_scan", 10, &laserCallback);
-    //ros::Subscriber subOdometry = nh_.subscribe<nav_msgs::Odometry>("odom", 10, &odomCallback);
+    ros::Subscriber subOdometry = nh_.subscribe<nav_msgs::Odometry>("odom", 10, &odomCallback);
     
     ChatterXDDP laser_chatter("/laser_nrt", XDDP_PORT_LASER);
-    //ChatterXDDP odom_chatter("/odom_nrt", XDDP_PORT_ODOM);
+    ChatterXDDP odom_chatter("/odom_nrt", XDDP_PORT_ODOM);
 
     std::size_t laser_fail_count = 0, odom_fail_count = 0;
 
@@ -63,19 +61,23 @@ int main(int argc, char** argv)
             if (laser_fail_count % 10 == 0){
                 ROS_INFO("Laser Data Failed to be acknowledged %d times !!", laser_fail_count);
             } else {
-                ROS_INFO("RT Thread |ACK| received...")
+                ROS_INFO("Laser RT Thread |ACK| received...");
             }
         }
-        /*
+        
         sprintf(fwd_buffer, "[%f | %f | %f]", px, py, oz);
         odom_chatter.nrt_thread_write(fwd_buffer);
         buffer = odom_chatter.nrt_thread_read();
-        if (buffer != "ack") 
+        if (!(buffer[0] == 'a' && buffer[1] == 'c' && buffer[2] == 'k'))
         {
-            ROS_INFO("Laser Data Failed to be acknowledged");
             odom_fail_count++;
+            if (odom_fail_count % 10 == 0){
+                ROS_INFO("Odom Data Failed to be acknowledged %d times !!", laser_fail_count);
+            } else {
+                ROS_INFO("Odom RT Thread |ACK| received...");
+            }
         }
-        */
+        
         ros::spinOnce();
         loop_rate.sleep();
     }
