@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "xddp_sensors");
     char* buffer;
-    char fwd_buffer[256];
+    char fwd_buffer[64];
     ros::NodeHandle nh_;
     ros::Subscriber subLaser = nh_.subscribe<sensor_msgs::LaserScan>("/base_scan", 10, &laserCallback);
     ros::Subscriber subOdometry = nh_.subscribe<nav_msgs::Odometry>("odom", 10, &odomCallback);
@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 
     while (ros::ok())
     {
-        sprintf(fwd_buffer, "[%f | %f | %f]", left_distance, front_distance, right_distance);
+        sprintf(fwd_buffer, "%f %f %f", left_distance, front_distance, right_distance);
         laser_chatter.nrt_thread_write(fwd_buffer);
         buffer = laser_chatter.nrt_thread_read();
         if (!(buffer[0] == 'a' && buffer[1] == 'c' && buffer[2] == 'k'))
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
             }
         }
         
-        sprintf(fwd_buffer, "[%f | %f | %f]", px, py, oz);
+        sprintf(fwd_buffer, "%f %f %f", px, py, oz);
         odom_chatter.nrt_thread_write(fwd_buffer);
         buffer = odom_chatter.nrt_thread_read();
         if (!(buffer[0] == 'a' && buffer[1] == 'c' && buffer[2] == 'k'))

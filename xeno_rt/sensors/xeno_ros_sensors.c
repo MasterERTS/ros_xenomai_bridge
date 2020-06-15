@@ -28,8 +28,9 @@ static void *realtime_thread1(void *arg)
         struct sockaddr_ipc saddr;
         int ret, s, len;
         struct timespec ts;
+        float r_dist = 0.0, f_dist = 0.0, l_dist = 0.0;
         size_t poolsz;
-        char buf[256];
+        char buf[64];
         /*
          * Get a datagram socket to bind to the RT endpoint. Each
          * endpoint is represented by a port number within the XDDP
@@ -75,7 +76,8 @@ static void *realtime_thread1(void *arg)
                 ret = recvfrom(s, buf, sizeof(buf), 0, NULL, 0);
                 if (ret <= 0)
                         fail("recvfrom");
-                printf("%s   => \"%.*s\" echoed by peer\n", __FUNCTION__, 256, buf);
+                sscanf(buf, "%f %f %f", &l_dist, &f_dist, &r_dist);
+                rt_printf("%s   => [%f | %f | %f] echoed by peer\n", __FUNCTION__, l_dist, f_dist, r_dist);
                 
                 ret = sendto(s, "ack", len, 0, NULL, 0);
                 if (ret != len)
@@ -100,8 +102,9 @@ static void *realtime_thread2(void *arg)
         struct sockaddr_ipc saddr;
         int ret, s, len;
         struct timespec ts;
+        float px = 0.0, py = 0.0, oz = 0.0;
         size_t poolsz;
-        char buf[256];
+        char buf[64];
         /*
          * Get a datagram socket to bind to the RT endpoint. Each
          * endpoint is represented by a port number within the XDDP
@@ -147,7 +150,8 @@ static void *realtime_thread2(void *arg)
                 ret = recvfrom(s, buf, sizeof(buf), 0, NULL, 0);
                 if (ret <= 0)
                         fail("recvfrom");
-                printf("%s   => \"%s\" echoed by peer\n", __FUNCTION__, buf);
+                sscanf(buf, "%f %f %f", &px, &py, &oz);
+                rt_printf("%s   => [%f | %f | %f] echoed by peer\n", __FUNCTION__, px, py, oz);
                 
                 ret = sendto(s, "ack", len, 0, NULL, 0);
                 if (ret != len)

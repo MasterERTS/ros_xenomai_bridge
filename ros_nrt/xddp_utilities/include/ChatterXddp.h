@@ -9,13 +9,13 @@ class ChatterXDDP : public MinimalPublisher
         ChatterXDDP(std::string topic, unsigned int xddp_pipe);
         char* nrt_thread_read_write();
         char* nrt_thread_read();
-        void nrt_thread_write(char buffer[256]);
+        void nrt_thread_write(char buffer[64]);
 
     private:
         static const char *msg[];
 
         static void fail(const char *reason);
-        char buf[256], *devname;
+        char buf[64], *devname;
 	    int fd, ret;
         unsigned int req_n;
 };

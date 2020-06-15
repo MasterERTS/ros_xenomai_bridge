@@ -43,7 +43,7 @@ char* ChatterXDDP::nrt_thread_read()
     return(this->buf);
 }
 
-void ChatterXDDP::nrt_thread_write(char buffer[256]) 
+void ChatterXDDP::nrt_thread_write(char buffer[64]) 
 {
 	if (this->req_n == 0) {
 		/* Get the next message from realtime_thread. */
