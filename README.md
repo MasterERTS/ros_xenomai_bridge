@@ -4,6 +4,7 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
+[![Hits](http://hits.dwyl.com/mastererts/ros_xenomai_bridge.svg)](http://hits.dwyl.com/mastererts/ros_xenomai_bridge)
 
 <br />
 <p align="center">
@@ -16,14 +17,14 @@
   <p align="center">
     Uses the XDDP communication protocol to create a pipe between Xenomai applications and ROS nodes
     <br />
-    <a href="https://github.com/mastererts/ros-xenomai-bridge/readme.md"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/mastererts/ros_xenomai_bridge/readme.md"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/mastererts/ros-xenomai-bridge">View Demo</a>
+    <a href="https://github.com/mastererts/ros_xenomai_bridge">View Demo</a>
     ·
-    <a href="https://github.com/mastererts/ros-xenomai-bridge/issues">Report Bug</a>
+    <a href="https://github.com/mastererts/ros_xenomai_bridge/issues">Report Bug</a>
     ·
-    <a href="https://github.com/mastererts/ros-xenomai-bridge/issues">Request Feature</a>
+    <a href="https://github.com/mastererts/ros_xenomai_bridge/issues">Request Feature</a>
   </p>
 </p>
 
@@ -92,17 +93,63 @@ On the ROS side, a node opens the pipe, reads the traffic, echoes it back and pu
 
 ## Setup
 
-1. (Optional) Click on `Fork`
-2. Clone the project on your local machine : `git clone https://github.com/mastererts/ros-xenomai-bridge.git`
-3. Install dependencies : `insert line to meet dependencies`
+Note : the project was tested with Xenomai 3, patched on a 4.19.117 kernel, and using ROS Melodic.
+
+1. Install [Xenomai](https://mastererts.github.io/rtros-documentation/2020/04/21/xenomai.html)
+2. Install [ROS](https://mastererts.github.io/rtros-documentation/2020/04/19/ros.html)
+3. Clone the project in your `catkin_ws` : 
+```shell
+$ cd ~/catkin_ws/src
+$ git clone https://github.com/mastererts/ros_xenomai_bridge.git
+```
+4. Build the project :
+```shell
+$ cd ~/catkin_ws
+$ catkin_make
+```
+
+## Test
+
+1. Launch the xenomai echo application :
+```sh
+$ cd ~/catkin_ws/src/ros_xenomai_bridge/talker
+$ make
+$ sudo ./start.sh
+```
+
+2. Run the ROS chatter node in a new terminal (read the pipe and publish the data)
+```sh
+$ rosrun xddp_talker chatter
+```
+Note : the xenomai application terminal should start echo-ing messages that were sent and echoed back by the ROS node
+
+3. Run the ROS listener node in a new terminal (subscribe to /xddp and print the data)
+```sh
+$ rosrun xddp_talker listener
+```
+Note : everything went smoothly if it prints the same message echoed by the Xenomai Application terminal
+
+If it ran with the expected behaviour, you can run the reactive navigation project! 
 
 ## Run
 
-<!--- how to run your app ? -->
+1. Launch the xenomai sensor application :
+```sh
+$ cd ~/catkin_ws/src/ros_xenomai_bridge/sensors
+$ make
+$ sudo ./start.sh
+```
+
+2. (New Terminal) Launch the Reactive Navigation package along with the ROS xddp_sensor node :
+```sh
+$ roslaunch xddp_bringup xddp_project_navigation.launch
+```
+
+The Xenomai application should have two real time threads printing respectively Odometry and Laser Scan data from the ROS application.
 
 ## Roadmap
 
-See the [open issues](https://github.com/mastererts/ros-xenomai-bridge/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/mastererts/ros_xenomai_bridge/issues) for a list of proposed features (and known issues).
 
 ## Contribute
 
@@ -110,7 +157,7 @@ Contributions are what make the open source community such an amazing place to l
 
 ### Contribute on proposed features
 
-1. Choose any open issue from [here](https://github.com/mastererts/ros-xenomai-bridge/issues). 
+1. Choose any open issue from [here](https://github.com/mastererts/ros_xenomai_bridge/issues). 
 2. Comment on the issue: `Can I work on this?` and get assigned.
 3. Make changes to your `Fork` and send a PR.
 
@@ -149,15 +196,15 @@ Erwin Lejeune - [@spida_rwin](https://twitter.com/spida_rwin) - erwin.lejeune15@
 
 - [Erwin Lejeune](https://github.com/Guilyx)
 
-[contributors-shield]: https://img.shields.io/github/contributors/mastererts/ros-xenomai-bridge.svg?style=flat-square
-[contributors-url]: https://github.com/mastererts/ros-xenomai-bridge/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/mastererts/ros-xenomai-bridge.svg?style=flat-square
-[forks-url]: https://github.com/mastererts/ros-xenomai-bridge/network/members
-[stars-shield]: https://img.shields.io/github/stars/mastererts/ros-xenomai-bridge.svg?style=flat-square
-[stars-url]: https://github.com/mastererts/ros-xenomai-bridge/stargazers
-[issues-shield]: https://img.shields.io/github/issues/mastererts/ros-xenomai-bridge.svg?style=flat-square
-[issues-url]: https://github.com/mastererts/ros-xenomai-bridge/issues
-[license-shield]: https://img.shields.io/github/license/mastererts/ros-xenomai-bridge.svg?style=flat-square
-[license-url]: https://github.com/mastererts/ros-xenomai-bridge/blob/master/LICENSE.md
+[contributors-shield]: https://img.shields.io/github/contributors/mastererts/ros_xenomai_bridge.svg?style=flat-square
+[contributors-url]: https://github.com/mastererts/ros_xenomai_bridge/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/mastererts/ros_xenomai_bridge.svg?style=flat-square
+[forks-url]: https://github.com/mastererts/ros_xenomai_bridge/network/members
+[stars-shield]: https://img.shields.io/github/stars/mastererts/ros_xenomai_bridge.svg?style=flat-square
+[stars-url]: https://github.com/mastererts/ros_xenomai_bridge/stargazers
+[issues-shield]: https://img.shields.io/github/issues/mastererts/ros_xenomai_bridge.svg?style=flat-square
+[issues-url]: https://github.com/mastererts/ros_xenomai_bridge/issues
+[license-shield]: https://img.shields.io/github/license/mastererts/ros_xenomai_bridge.svg?style=flat-square
+[license-url]: https://github.com/mastererts/ros_xenomai_bridge/blob/master/LICENSE.md
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/erwinlejeune-lkn
