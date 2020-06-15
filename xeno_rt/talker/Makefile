@@ -1,5 +1,5 @@
-## This is a project made within Seoul National University of Science and Technology
-## Embedded Systems Laboratory 2015 - Raimarius Tolentino Delgado
+## This is a project made in Ecole Centrale de Nantes
+## The goal was to use Xenomai to bring somewhat of realtime capabilities to ROS
 
 XENOMAI_PATH=/usr/xenomai
 
