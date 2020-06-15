@@ -51,6 +51,7 @@ void ChatterXDDP::nrt_thread_write(char buffer[64])
 		if (this->ret <= 0) this->fail("read");
 		this->req_n++;
 	}
-	this->ret = write(this->fd, buffer, this->ret);
+	sprintf(this->buf, buffer);
+	this->ret = write(this->fd, this->buf, sizeof(this->buf));
 	if (this->ret <= 0) this->fail("write");
 }
