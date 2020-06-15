@@ -23,7 +23,7 @@ static void fail(const char *reason)
         exit(EXIT_FAILURE);
 }
 
-static void *realtime_thread1(void *arg)
+static void *rt_laser_task(void *arg)
 {
         struct sockaddr_ipc saddr;
         int ret, s, len;
@@ -73,11 +73,12 @@ static void *realtime_thread1(void *arg)
                   __FUNCTION__, ret, ret, "start laser");
         for (;;) {
                 len = strlen("ack");
-                ret = recvfrom(s, buf, sizeof(buf), 0, NULL, 0);
+                ret = recvfrom(s, buf, 64, 0, NULL, 0);
                 if (ret <= 0)
                         fail("recvfrom");
                 sscanf(buf, "%f %f %f", &l_dist, &f_dist, &r_dist);
-                rt_printf("%s   => [%f | %f | %f] echoed by peer\n", __FUNCTION__, l_dist, f_dist, r_dist);
+                
+                rt_printf("%s   => echoed by peer : [%.2f %.2f %.2f]\n", __FUNCTION__, l_dist, f_dist, r_dist);
                 
                 ret = sendto(s, "ack", len, 0, NULL, 0);
                 if (ret != len)
@@ -97,7 +98,7 @@ static void *realtime_thread1(void *arg)
 }
 
 
-static void *realtime_thread2(void *arg)
+static void *rt_odom_task(void *arg)
 {
         struct sockaddr_ipc saddr;
         int ret, s, len;
@@ -147,11 +148,12 @@ static void *realtime_thread2(void *arg)
                   __FUNCTION__, ret, ret, "start odom");
         for (;;) {
                 len = strlen("ack");
-                ret = recvfrom(s, buf, sizeof(buf), 0, NULL, 0);
+                ret = recvfrom(s, buf, 64, 0, NULL, 0);
                 if (ret <= 0)
                         fail("recvfrom");
                 sscanf(buf, "%f %f %f", &px, &py, &oz);
-                rt_printf("%s   => [%f | %f | %f] echoed by peer\n", __FUNCTION__, px, py, oz);
+                int rcvlen = strlen(buf);
+                rt_printf("%s   => echoed by peer : [%.2f %.2f %.2f]\n", __FUNCTION__, px, py, oz);
                 
                 ret = sendto(s, "ack", len, 0, NULL, 0);
                 if (ret != len)
@@ -200,11 +202,11 @@ int main(int argc, char **argv)
         pthread_attr_setinheritsched(&rtattr, PTHREAD_EXPLICIT_SCHED);
         pthread_attr_setschedpolicy(&rtattr, SCHED_FIFO);
         pthread_attr_setschedparam(&rtattr, &rtparam);
-        errno = pthread_create(&rt1, &rtattr, &realtime_thread1, NULL);
+        errno = pthread_create(&rt1, &rtattr, &rt_laser_task, NULL);
         if (errno)
                 fail("pthread_create rt1");
         
-        errno = pthread_create(&rt2, &rtattr, &realtime_thread2, NULL);
+        errno = pthread_create(&rt2, &rtattr, &rt_odom_task, NULL);
         if (errno)
                 fail("pthread_create rt2");
         
