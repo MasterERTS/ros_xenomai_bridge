@@ -73,7 +73,7 @@ echoing process implemented by this program.
 
 <p align="center">
     <!--- relative path means image/image.png instead of https://etc... -->
-    <img src="img/sensor_flowchart.png" alt="FC" width="450" height="400">                           
+    <img src="img/sensor_flowchart.png" alt="FC" width="500" height="400">                           
 </a>
 
 See Makefile in the xeno_rt/ directory for more information
