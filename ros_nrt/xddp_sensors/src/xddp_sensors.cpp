@@ -9,6 +9,8 @@
 #define XDDP_PORT_LASER 0
 #define XDDP_PORT_ODOM  1
 
+bool debug = false;
+
 float left_distance = 0.0, front_distance = 0.0, right_distance = 0.0;
 float px = 0.0, py = 0.0, oz = 0.0;
 
@@ -52,7 +54,12 @@ int main(int argc, char** argv)
 
     while (ros::ok())
     {
-        sprintf(fwd_buffer, "%f %f %f", left_distance, front_distance, right_distance);
+        sprintf(fwd_buffer, "%.2f %.2f %.2f", left_distance, front_distance, right_distance);
+        if (debug) 
+        {
+            printf("%s\r\n", fwd_buffer);
+        }
+
         laser_chatter.nrt_thread_write(fwd_buffer);
         buffer = laser_chatter.nrt_thread_read();
         if (!(buffer[0] == 'a' && buffer[1] == 'c' && buffer[2] == 'k'))
@@ -60,12 +67,20 @@ int main(int argc, char** argv)
             laser_fail_count++;
             if (laser_fail_count % 10 == 0){
                 ROS_INFO("Laser Data Failed to be acknowledged %d times !!", laser_fail_count);
-            } else {
+            }
+        } else {
+            if(debug)
+            {
                 ROS_INFO("Laser RT Thread |ACK| received...");
+                printf("%s\r\n", buffer);
             }
         }
-        
-        sprintf(fwd_buffer, "%f %f %f", px, py, oz);
+
+        sprintf(fwd_buffer, "%.2f %.2f %.2f", px, py, oz);
+        if (debug) 
+        {
+            printf("%s\r\n", fwd_buffer);
+        }
         odom_chatter.nrt_thread_write(fwd_buffer);
         buffer = odom_chatter.nrt_thread_read();
         if (!(buffer[0] == 'a' && buffer[1] == 'c' && buffer[2] == 'k'))
@@ -73,8 +88,12 @@ int main(int argc, char** argv)
             odom_fail_count++;
             if (odom_fail_count % 10 == 0){
                 ROS_INFO("Odom Data Failed to be acknowledged %d times !!", laser_fail_count);
-            } else {
+            }
+        } else {
+            if(debug)
+            {
                 ROS_INFO("Odom RT Thread |ACK| received...");
+                printf("%s\r\n", buffer);
             }
         }
         
